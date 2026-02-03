@@ -1,29 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8">
-        <h2>Your Dashboard</h2>
-        <p class="text-muted">Welcome back! Here are your current streaks.</p>
-        
-        <div class="list-group shadow-sm">
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Sample Habit: Morning Run</strong>
-                    <br><small class="text-success">🔥 5 Day Streak</small>
-                </div>
-                <button class="btn btn-outline-primary btn-sm">Complete</button>
-            </div>
-        </div>
-    </div>
+  <h2>Your Dashboard</h2>
+  <p>Welcome back! Here are your current habits.</p>
 
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Quick Actions</h5>
-                <a href="/add_habit" class="btn btn-success w-100">Add New Habit</a>
-            </div>
-        </div>
-    </div>
-</div>
+  <ul>
+    {% for habit in habits %}
+      <li>{{ habit.name }} <small>Added {{ habit.created_at.strftime('%Y-%m-%d') }}</small></li>
+    {% else %}
+      <li>No habits yet — add one below.</li>
+    {% endfor %}
+  </ul>
+
+  <form action="/add_habit" method="post">
+    <input name="name" placeholder="Habit name" required>
+    <button type="submit">Add</button>
+  </form>
 {% endblock %}
