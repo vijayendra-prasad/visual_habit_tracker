@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+
+{% block content %}
+  <h2>Streaks</h2>
+  <p>Visual summary of your current streaks and quick actions.</p>
+
+  <div class="grid-3">
+    {% for s in streak_items %}
+      <div>
+        {{ ui.card(s.title, '', '<p class="big">' ~ s.value ~ '</p><p class="muted">' ~ s.note ~ '</p>') }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div>{{ ui.card('Legend', '', '<p>Streaks are measured as consecutive days you completed a habit.</p>') }}</div>
+{% endblock %}

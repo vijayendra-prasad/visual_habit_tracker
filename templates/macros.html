@@ -1,0 +1,25 @@
+{# Reusable UI components for the app #}
+{% macro card(title='', classes='', body='') -%}
+  <section class="card {{ classes }}">
+    {% if title %}<header class="card-header"><h3>{{ title }}</h3></header>{% endif %}
+    <div class="card-body">{{ body|safe }}</div>
+  </section>
+{%- endmacro %}
+
+{% macro metric(name, value, small='') -%}
+  <div class="metric">
+    <div class="metric-value">{{ value }}</div>
+    <div class="metric-name">{{ name }}</div>
+    {% if small %}<div class="metric-small">{{ small }}</div>{% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro compact_list(items) -%}
+  <ul class="compact-list">
+  {% for it in items %}
+    <li>{{ it }}</li>
+  {% else %}
+    <li>No items to show.</li>
+  {% endfor %}
+  </ul>
+{%- endmacro %}

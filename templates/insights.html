@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+
+{% block content %}
+  <h2>Insights</h2>
+  <p>Automated suggestions based on your activity, presented as small cards for quick action.</p>
+
+  <div class="grid-2">
+    {% for insight in insights %}
+      {{ ui.card(insight.title, '', '<p>' ~ insight.body ~ '</p><p><a href="#">Try suggestion</a></p>') }}
+    {% else %}
+      {{ ui.card('No insights yet', '', '<p>Perform some activities and insights will appear here.</p>') }}
+    {% endfor %}
+  </div>
+{% endblock %}

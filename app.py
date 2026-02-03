@@ -163,35 +163,50 @@ def register_routes(app):
     # Minimal placeholder pages for UI navigation links
     @app.route('/profile')
     def profile():
-        return render_template_string("{% extends 'base.html' %}{% block content %}<h2>Profile</h2><p>Profile details coming soon.</p>{% endblock %}")
+        # Compute lightweight context for display
+        habits = Habit.query.order_by(Habit.created_at.desc()).all()
+        recent_logs = HabitLog.query.order_by(HabitLog.timestamp.desc()).limit(5).all()
+        # Simple streak calculation: longest consecutive days for now is placeholder
+        streak = 0
+        return render_template('profile.html', habits=habits, recent=recent_logs, streak=streak)
 
     @app.route('/streaks')
     def streaks():
-        return render_template_string("{% extends 'base.html' %}{% block content %}<h2>Streaks</h2><p>Your streaks will be visualized here.</p>{% endblock %}")
+        # Provide simple items for UI cards
+        # In future, replace with real analytics
+        streak_items = [
+            {'title': 'Longest Streak', 'value': '0', 'note': 'Long term best'},
+            {'title': 'Current Streak', 'value': '0', 'note': 'Active days'},
+            {'title': 'Best Habit', 'value': '—', 'note': 'Most consistent'}
+        ]
+        return render_template('streaks.html', streak_items=streak_items)
 
     @app.route('/graph')
     def graph():
-        return render_template_string("{% extends 'base.html' %}{% block content %}<h2>Graph</h2><p>Graphs and trends will be available here.</p>{% endblock %}")
+        return render_template('graph.html')
 
     @app.route('/insights')
     def insights():
-        return render_template_string("{% extends 'base.html' %}{% block content %}<h2>Insights</h2><p>Insights and suggestions will appear here.</p>{% endblock %}")
+        # Placeholder insights - replace with analytic engine later
+        insights = [
+            {'title': 'Try a 7-day streak', 'body': 'Set a small daily goal to build momentum.'},
+            {'title': 'Wear a reminder', 'body': 'Set a phone alarm or calendar reminder.'}
+        ]
+        return render_template('insights.html', insights=insights)
 
-    @app.route('/settings')
+    @app.route('/settings', methods=['GET', 'POST'])
     def settings():
-        return render_template_string("{% extends 'base.html' %}{% block content %}<h2>Settings</h2><p>App settings and preferences.</p>{% endblock %}")
+        # No persistent save yet; UI shows form that can be wired later
+        return render_template('settings.html')
 
     @app.route('/help')
     def help_page():
-        return render_template_string("{% extends 'base.html' %}{% block content %}<h2>Help</h2><p>Documentation and support links.</p>{% endblock %}")
+        return render_template('help.html')
 
     @app.route('/calendar')
     def calendar_page():
         now = datetime.now(timezone.utc)
-        return render_template_string(
-            "{% extends 'base.html' %}{% block content %}<h2>Calendar</h2><p><a href='{{ url }}'>View current month data (JSON)</a></p>{% endblock %}",
-            url=url_for('calendar_month', year=now.year, month=now.month)
-        )
+        return render_template('calendar_page.html', url=url_for('calendar_month', year=now.year, month=now.month))
 
 
 def create_app(test_config=None):

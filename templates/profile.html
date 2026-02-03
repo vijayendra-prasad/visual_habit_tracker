@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+
+{% block content %}
+  <h2>Profile</h2>
+  <div class="two-col">
+    <div class="col main-col">
+      {{ ui.card('Account', '', '<p><strong>Display Name:</strong> <em>Not set</em></p><p><a href="/settings">Edit profile & settings</a></p>') }}
+
+      {{ ui.card('Recent activity', '', ui.compact_list(recent|map(attribute='summary')|list)) }}
+    </div>
+
+    <aside class="col side-col">
+      <div class="metrics-wrap">
+        {{ ui.metric('Current Streak', streak, 'days') }}
+        {{ ui.metric('Total Habits', habits|length) }}
+      </div>
+    </aside>
+  </div>
+{% endblock %}

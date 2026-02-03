@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+
+{% block content %}
+  <h2>Settings</h2>
+  {{ ui.card('Profile Settings', '', '<form method="post" action="#" class="settings-form">\n    <label>Display name<br><input name="display_name" placeholder="Your name"></label><br>\n    <label>Timezone<br><select name="timezone"><option>UTC</option><option>Local</option></select></label><br>\n    <label>Weekly goal (days)<br><input name="weekly_goal" type="number" min="1" max="7" value="3"></label><br>\n    <button type="submit">Save</button>\n  </form>') }}
+
+  {{ ui.card('App Preferences', '', '<p>Lightweight, offline-first friendly. No tracking is sent to external services.</p>') }}
+{% endblock %}

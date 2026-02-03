@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+
+{% block content %}
+  <h2>Graph</h2>
+  <p>Lightweight, responsive placeholder for future charts (SVG-based, no heavy libs by default).</p>
+
+  {{ ui.card('Habits Completion (last 7 days)', '', '<div class="chart-placeholder" role="img" aria-label="Habits trend chart">\n    <svg viewBox="0 0 100 30" preserveAspectRatio="none" class="chart">\n      <polyline points="0,20 14,18 28,10 42,12 56,8 70,12 84,6 100,10" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>\n    </svg>\n  </div>') }}
+
+  {{ ui.card('Notes', '', '<p>Charts will be interactive and accessible; implement incremental enhancements (ARIA, keyboard friendly).</p>') }}
+{% endblock %}

@@ -25,3 +25,23 @@ h1 { color: #0f172a; }
 @media (max-width:768px){
   .nav-actions { display:none; }
 }
+
+/* UI components */
+.card { background:#fff; border-radius:10px; padding:12px; box-shadow:0 6px 18px rgba(15,23,42,0.06); margin-bottom:12px; }
+.card-header h3{ margin:0 0 8px 0; font-size:1rem; }
+.card-body{ font-size:0.95rem; color:#111827; }
+.two-col{ display:flex; gap:16px; }
+.two-col .main-col{ flex:1 }
+.two-col .side-col{ width:220px }
+@media (max-width:720px){ .two-col{ flex-direction:column } .two-col .side-col{ width:auto } }
+.metrics-wrap{ display:flex; flex-direction:column; gap:10px }
+.metric{ background:linear-gradient(180deg,#fff,#f8fafc); padding:10px; border-radius:8px; text-align:center; }
+.metric-value{ font-weight:700; font-size:1.5rem }
+.metric-name{ color:#4b5563; font-size:0.85rem }
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px }
+.grid-2{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px }
+@media (max-width:900px){ .grid-3{ grid-template-columns:repeat(2,1fr) } }
+@media (max-width:600px){ .grid-3, .grid-2{ grid-template-columns:1fr } }
+.compact-list{ padding-left:1rem }
+.settings-form input, .settings-form select { width:100%; padding:8px; margin:6px 0 12px 0; border-radius:6px; border:1px solid #e5e7eb }
+.settings-form button{ background:#2563eb; color:#fff; border:0; padding:8px 12px; border-radius:6px; cursor:pointer }
