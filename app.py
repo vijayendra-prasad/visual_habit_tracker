@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, r
 from models import db, Habit, HabitLog  # Import models
 from datetime import datetime, timedelta, timezone
 import calendar
-import os
 from sqlalchemy.exc import OperationalError
 
 def init_extensions(app):
