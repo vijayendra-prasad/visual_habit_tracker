@@ -1,6 +1,42 @@
-body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 2rem; background: #f8fafc; color: #111827; }
+/* Theme variables for light/dark mode */
+:root{
+  --bg: #f8fafc;
+  --text: #111827;
+  --muted: #6b7280;
+  --nav-start: #0ea5a4;
+  --nav-end: #2563eb;
+  --card-bg: #ffffff;
+}
+body{ font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 2rem; background: var(--bg); color: var(--text); }
 main { max-width: 40rem; margin: 0 auto; }
-h1 { color: #0f172a; }
+h1 { color: var(--text); }
+
+/* Dark theme overrides */
+body.dark{
+  --bg: #0b1220;
+  --text: #e6edf3;
+  --muted: #94a3b8;
+  --nav-start: #0f172a;
+  --nav-end: #374151;
+  --card-bg: #0f172a;
+}
+
+/* Theme toggle */
+.theme-toggle { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: inherit; padding:6px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.theme-toggle:focus{ outline:2px solid rgba(255,255,255,0.18); }
+.theme-toggle svg{ display:block }
+.theme-toggle .drawer-toggle-label{ margin-left:8px; font-size:0.95rem; }
+
+/* Drawer specific spacing */
+.nav-drawer .drawer-actions{ display:flex; align-items:center; gap:8px; padding:8px 0 0 0; }
+
+/* Ensure elements use variables */
+.top-nav { background: linear-gradient(90deg,var(--nav-start),var(--nav-end)); color:var(--text); }
+.card { background: var(--card-bg); }
+.nav-list a{ color:var(--text); }
+.nav-drawer{ background: var(--card-bg); color:var(--text); }
+
+/* keep rest of styles below (existing rules kept) */
 
 /* Top nav */
 .top-nav { display:flex; align-items:center; gap:12px; background: linear-gradient(90deg,#0ea5a4,#2563eb); color:#fff; padding:12px 16px; border-radius:8px; }
@@ -21,9 +57,11 @@ h1 { color: #0f172a; }
 .nav-list a { text-decoration:none; color:#111827; display:block; padding:8px 6px; border-radius:6px; }
 .nav-list a:hover { background:#f3f4f6; }
 
-/* Responsive: hide nav-actions on small screens */
+/* Responsive: hide nav links on small screens but keep theme toggle visible */
 @media (max-width:768px){
-  .nav-actions { display:none; }
+  .nav-actions { display:flex; }
+  .nav-actions .nav-link { display:none; }
+  .nav-actions .theme-toggle { display:inline-flex; }
 }
 
 /* UI components */

@@ -18,6 +18,11 @@
         <a href="/" class="nav-link">Home</a>
         <a href="/profile" class="nav-link">Profile</a>
         <a href="/insights" class="nav-link">Insights</a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path id="sunPath" d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 100 10 5 5 0 000-10z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
       </div>
     </nav>
 
@@ -25,6 +30,7 @@
     <div id="navOverlay" class="nav-overlay" aria-hidden="true">
       <div class="nav-drawer" role="dialog" aria-label="Main navigation">
         <button id="navClose" class="nav-close" aria-label="Close menu">✕</button>
+
         <ul class="nav-list">
           <li><a href="/profile">Profile</a></li>
           <li><a href="/streaks">Streaks</a></li>
