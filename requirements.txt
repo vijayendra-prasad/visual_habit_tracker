@@ -1,5 +1,10 @@
+# Core dependencies
 Flask>=2.2
 Flask-SQLAlchemy>=3.0
+
+# Dev / Test
 pytest>=7.0
 python-dotenv>=1.0
+
+# Optional (production WSGI server on Windows)
 waitress>=2.2

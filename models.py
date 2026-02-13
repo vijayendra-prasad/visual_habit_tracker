@@ -41,3 +41,19 @@ class HabitLog(db.Model):
 
     def __repr__(self):
         return f"<HabitLog {self.id} habit={self.habit_id} ts={self.timestamp}>"
+
+
+class User(db.Model):
+    """
+    This table stores user profile information.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    display_name = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=True)
+    profile_picture = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=_now_utc)
+    updated_at = db.Column(db.DateTime, default=_now_utc, onupdate=_now_utc)
+
+    def __repr__(self):
+        return f"<User {self.id} {self.email}>"

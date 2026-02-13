@@ -2,19 +2,451 @@
 {% import 'macros.html' as ui %}
 
 {% block content %}
-  <h2>Profile</h2>
-  <div class="two-col">
-    <div class="col main-col">
-      {{ ui.card('Account', '', '<p><strong>Display Name:</strong> <em>Not set</em></p><p><a href="/settings">Edit profile & settings</a></p>') }}
+  <div class="profile-container">
+    <h2 class="page-title">Profile Settings</h2>
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+            <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-      {{ ui.card('Recent activity', '', ui.compact_list(recent|map(attribute='summary')|list)) }}
-    </div>
+    <div class="profile-grid">
+      <!-- Main Profile Form -->
+      <div class="profile-main">
+        <section class="card profile-card">
+          <header class="card-header">
+            <h3>Account Information</h3>
+            <p class="card-subtitle">Update your profile details and password</p>
+          </header>
+          
+          <form method="POST" class="profile-form" id="profileForm" enctype="multipart/form-data">
+            <!-- Profile Picture Field -->
+            <div class="form-group">
+              <label class="form-label">Profile Picture</label>
+              
+              <!-- Current Profile Picture Display -->
+              {% if user.profile_picture %}
+              <div class="profile-picture-display-wrapper">
+                <div class="profile-picture-container">
+                  <img 
+                    id="currentProfilePicture" 
+                    src="{{ url_for('static', filename='uploads/profile_pictures/' + user.profile_picture) }}" 
+                    alt="Profile Picture"
+                    class="profile-picture-image"
+                  >
+                </div>
+                <button type="button" class="btn btn-danger delete-picture-btn" id="deletePictureBtn">
+                  <span class="btn-icon">🗑️</span>
+                  Delete Picture
+                </button>
+              </div>
+              {% endif %}
+              
+              <!-- File Upload Section -->
+              <div class="file-input-wrapper">
+                <input 
+                  type="file" 
+                  id="profile_picture" 
+                  name="profile_picture" 
+                  class="form-input file-input" 
+                  accept="image/*"
+                >
+                <label for="profile_picture" class="file-input-label">
+                  <div class="file-input-preview-container">
+                    <img id="preview_image" class="file-input-preview" alt="Preview" style="display:none;">
+                    <span class="file-preview-placeholder" id="placeholder">
+                      <span class="file-icon">📷</span>
+                      <span class="file-text">Choose New Image</span>
+                    </span>
+                  </div>
+                </label>
+                <span class="file-name" id="file_name"></span>
+              </div>
+              <small class="form-hint">Upload a profile picture (images only, max 300KB)</small>
+              <small class="form-error" id="profile_picture_error"></small>
+            </div>
 
-    <aside class="col side-col">
-      <div class="metrics-wrap">
-        {{ ui.metric('Current Streak', streak, 'days') }}
-        {{ ui.metric('Total Habits', habits|length) }}
+            <!-- Display Name Field -->
+            <div class="form-group">
+              <label for="display_name" class="form-label">Display Name</label>
+              <input 
+                type="text" 
+                id="display_name" 
+                name="display_name" 
+                class="form-input" 
+                placeholder="Enter your full name"
+                maxlength="30"
+                required
+              >
+              <small class="form-hint">This is how your name will appear in the app (max 30 characters)</small>
+              <small class="form-error" id="display_name_error"></small>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                class="form-input" 
+                placeholder="Enter your email (Format: A@A.A)"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+              >
+              <small class="form-error" id="email_error"></small>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-input" 
+                placeholder="Enter new password (leave blank to keep current)"
+              >
+              <small class="form-hint">Minimum 6 characters with 1 uppercase, 1 lowercase, 1 numeric (optional if keeping current)</small>
+              <div class="password-strength">
+                <div class="strength-bar" id="strengthBar"></div>
+              </div>
+              <small class="form-error" id="password_error"></small>
+            </div>
+
+            <!-- Update Button -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <span class="btn-icon">✓</span>
+                Update Profile
+              </button>
+              <button type="reset" class="btn btn-secondary">
+                <span class="btn-icon">↻</span>
+                Reset
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Additional Info Card -->
+        <section class="card info-card">
+          <header class="card-header">
+            <h3>Account Status</h3>
+          </header>
+          <div class="card-body">
+            <div class="status-item">
+              <span class="status-label">Member Since</span>
+              <span class="status-value">
+                {% if user.created_at %}
+                  {{ user.created_at.strftime('%B %d, %Y') }}
+                {% else %}
+                  Today
+                {% endif %}
+              </span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Last Updated</span>
+              <span class="status-value">
+                {% if user.updated_at %}
+                  {{ user.updated_at.strftime('%B %d, %Y at %I:%M %p') }}
+                {% else %}
+                  Never
+                {% endif %}
+              </span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Account Type</span>
+              <span class="status-value">
+                <span class="badge badge-primary">Active</span>
+              </span>
+            </div>
+          </div>
+        </section>
       </div>
-    </aside>
+
+      <!-- Sidebar Stats -->
+      <aside class="profile-sidebar">
+        <div class="stats-card">
+          <h4>Your Progress</h4>
+          <div class="metrics-wrap">
+            {{ ui.metric('Current Streak', streak, 'days') }}
+            {{ ui.metric('Total Habits', habits|length) }}
+            {{ ui.metric('Recent Logs', recent|length) }}
+          </div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="card tips-card">
+          <header class="card-header">
+            <h3>💡 Quick Tips</h3>
+          </header>
+          <div class="card-body">
+            <ul class="tips-list">
+              <li>Keep your email updated for notifications</li>
+              <li>Use a strong password to protect your account</li>
+              <li>Check your profile monthly to stay organized</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card activity-card">
+          <header class="card-header">
+            <h3>Recent Activity</h3>
+          </header>
+          <div class="card-body">
+            {{ ui.compact_list(recent|map(attribute='habit')|map(attribute='name')|list) }}
+          </div>
+        </div>
+      </aside>
+    </div>
   </div>
+
+  <script>
+    const form = document.getElementById('profileForm');
+    const displayNameInput = document.getElementById('display_name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const profilePictureInput = document.getElementById('profile_picture');
+    const fileNameDisplay = document.getElementById('file_name');
+    const strengthBar = document.getElementById('strengthBar');
+
+    // Max file size: 300KB
+    const MAX_FILE_SIZE = 300 * 1024; // 300KB in bytes
+
+    // Validation patterns and rules
+    const validationRules = {
+      display_name: {
+        maxLength: 30,
+        errorElement: document.getElementById('display_name_error'),
+        validate: (value) => {
+          if (value.length > 30) {
+            return 'Full name cannot exceed 30 characters';
+          }
+          return '';
+        }
+      },
+      email: {
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        errorElement: document.getElementById('email_error'),
+        validate: (value) => {
+          if (value && !validationRules.email.pattern.test(value)) {
+            return 'Enter valid email address. Format: A@A.A (A can be alphanumeric, period(.))';
+          }
+          return '';
+        }
+      },
+      password: {
+        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
+        errorElement: document.getElementById('password_error'),
+        validate: (value) => {
+          if (value && value.length > 0) {
+            if (value.length < 6) {
+              return 'Password should be minimum 6 characters, with one capital letter, one small letter, one numeric';
+            }
+            if (!/(?=.*[a-z])/.test(value)) {
+              return 'Password should be minimum 6 characters, with one capital letter, one small letter, one numeric';
+            }
+            if (!/(?=.*[A-Z])/.test(value)) {
+              return 'Password should be minimum 6 characters, with one capital letter, one small letter, one numeric';
+            }
+            if (!/(?=.*\d)/.test(value)) {
+              return 'Password should be minimum 6 characters, with one capital letter, one small letter, one numeric';
+            }
+          }
+          return '';
+        }
+      },
+      profile_picture: {
+        errorElement: document.getElementById('profile_picture_error'),
+        validate: (file) => {
+          if (!file) return '';
+          
+          // Check if file is an image
+          if (!file.type.startsWith('image/')) {
+            return 'Only image files are allowed';
+          }
+          
+          // Check file size
+          if (file.size > MAX_FILE_SIZE) {
+            return 'Image size should be less than 300kb';
+          }
+          
+          return '';
+        }
+      }
+    };
+
+    // Profile Picture File Input Handler
+    const previewImage = document.getElementById('preview_image');
+    const placeholder = document.getElementById('placeholder');
+    const deletePictureBtn = document.getElementById('deletePictureBtn');
+    const currentProfilePicture = document.getElementById('currentProfilePicture');
+    
+    if (profilePictureInput) {
+      profilePictureInput.addEventListener('change', function() {
+        const file = this.files[0];
+        const error = validationRules.profile_picture.validate(file);
+        
+        if (file) {
+          // Display file name
+          fileNameDisplay.textContent = file.name;
+          fileNameDisplay.style.display = 'block';
+          
+          // Show preview image
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
+            placeholder.style.display = 'none';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          fileNameDisplay.textContent = '';
+          fileNameDisplay.style.display = 'none';
+          previewImage.style.display = 'none';
+          placeholder.style.display = 'flex';
+        }
+        
+        // Show/hide error
+        validationRules.profile_picture.errorElement.textContent = error;
+        this.classList.toggle('input-error', error !== '');
+      });
+    }
+    
+    // Delete Picture Button Handler
+    if (deletePictureBtn) {
+      deletePictureBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        if (confirm('Are you sure you want to delete your profile picture?')) {
+          try {
+            const response = await fetch('/profile/picture', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            if (response.ok) {
+              // Remove the profile picture display
+              const displayWrapper = document.querySelector('.profile-picture-display-wrapper');
+              if (displayWrapper) {
+                displayWrapper.remove();
+              }
+              alert('Profile picture deleted successfully!');
+            } else {
+              const data = await response.json();
+              alert('Error: ' + (data.error || 'Failed to delete picture'));
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the picture');
+          }
+        }
+      });
+    }
+
+    // Real-time validation
+    displayNameInput.addEventListener('input', function() {
+      const error = validationRules.display_name.validate(this.value);
+      validationRules.display_name.errorElement.textContent = error;
+      this.classList.toggle('input-error', error !== '');
+    });
+
+    emailInput.addEventListener('blur', function() {
+      const error = validationRules.email.validate(this.value);
+      validationRules.email.errorElement.textContent = error;
+      this.classList.toggle('input-error', error !== '');
+    });
+
+    emailInput.addEventListener('input', function() {
+      if (this.value) {
+        const error = validationRules.email.validate(this.value);
+        validationRules.email.errorElement.textContent = error;
+        this.classList.toggle('input-error', error !== '');
+      }
+    });
+
+    passwordInput.addEventListener('input', function() {
+      const error = validationRules.password.validate(this.value);
+      validationRules.password.errorElement.textContent = error;
+      this.classList.toggle('input-error', error !== '');
+      
+      // Update password strength bar
+      if (this.value) {
+        const strength = calculatePasswordStrength(this.value);
+        strengthBar.style.width = strength.percentage + '%';
+        strengthBar.className = 'strength-bar strength-' + strength.level;
+      } else {
+        strengthBar.style.width = '0';
+        strengthBar.className = 'strength-bar';
+      }
+    });
+
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+      let hasErrors = false;
+
+      // Validate display name
+      const displayNameError = validationRules.display_name.validate(displayNameInput.value);
+      if (displayNameError) {
+        validationRules.display_name.errorElement.textContent = displayNameError;
+        displayNameInput.classList.add('input-error');
+        hasErrors = true;
+      }
+
+      // Validate email
+      const emailError = validationRules.email.validate(emailInput.value);
+      if (emailError) {
+        validationRules.email.errorElement.textContent = emailError;
+        emailInput.classList.add('input-error');
+        hasErrors = true;
+      }
+
+      // Validate password (only if provided)
+      if (passwordInput.value) {
+        const passwordError = validationRules.password.validate(passwordInput.value);
+        if (passwordError) {
+          validationRules.password.errorElement.textContent = passwordError;
+          passwordInput.classList.add('input-error');
+          hasErrors = true;
+        }
+      }
+
+      // Validate profile picture (only if provided)
+      if (profilePictureInput.files.length > 0) {
+        const pictureError = validationRules.profile_picture.validate(profilePictureInput.files[0]);
+        if (pictureError) {
+          validationRules.profile_picture.errorElement.textContent = pictureError;
+          profilePictureInput.classList.add('input-error');
+          hasErrors = true;
+        }
+      }
+
+      if (hasErrors) {
+        e.preventDefault();
+      }
+    });
+    
+    function calculatePasswordStrength(password) {
+      let strength = 0;
+      if (password.length >= 6) strength += 25;
+      if (password.length >= 10) strength += 25;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+      if (/[0-9]/.test(password) && /[!@#$%^&*]/.test(password)) strength += 25;
+      
+      let level = 'weak';
+      if (strength >= 75) level = 'strong';
+      else if (strength >= 50) level = 'medium';
+      
+      return { percentage: strength, level: level };
+    }
+  </script>
 {% endblock %}

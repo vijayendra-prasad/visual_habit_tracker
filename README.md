@@ -1,39 +1,60 @@
-# 📈 Habit Tracker with Visual Insights
+# Habit Tracker (Visual)
 
-A professional-grade Flask application to track daily habits, monitor streaks, and visualize progress using data analytics. Built with a focus on clean architecture and actionable insights.
+A lightweight Flask app for tracking daily habits with a simple, responsive UI and small reusable components. Focused on maintainability: no heavy UI frameworks, minimal JS, accessible markup, and mobile-first styling.
 
-## 🚀 Key Features
-* **Habit Logging:** Easily create and track daily goals.
-* **Streak Tracking:** Motivation through visual "streak" counters.
-* **Visual Analytics:** Integrated charts to show completion trends over time.
-* **Mood Correlation:** (In Progress) Analyzing how habits affect your daily wellbeing.
+## Key features
+- **User Profile Management**: Edit display name, email, and password with form validation and password strength indicator.
+- Habit creation and simple logging (via form or JSON API).
+- Calendar and day views (JSON endpoints for integration).
+- Navigation pages: **Profile**, **Streaks**, **Graph**, **Insights**, **Settings**, **Help**, **Calendar** (placeholders ready for incremental enhancements).
+- Responsive top navigation with an accessible **dark / light** theme toggle.
+- Reusable UI components via Jinja macros (`templates/macros.html`) for cards, metrics, and lists.
 
-## 🛠️ Tech Stack
-* **Backend:** Python 3.x, Flask (Application Factory Pattern)
-* **Database:** SQLite with SQLAlchemy ORM (local dev, ignored in source control)
-* **Frontend:** Jinja2 Templates & a small `static/css/style.css` for layout
+## Tech stack
+- Python 3.x, Flask (app factory pattern)
+- SQLite with SQLAlchemy (local development)
+- Minimal CSS (`static/css/style.css`) and small JS for nav + theme (`static/js/nav.js`)
 
-## ⚙️ Running locally
-1. Install dependencies:
+## Running locally
+1. Create and activate a virtual environment (recommended):
+   ```bash
+   python -m venv .venv
+   # Windows (PowerShell)
+   .\.venv\Scripts\Activate
+   # macOS / Linux
+   source .venv/bin/activate
+   ```
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-2. Run the app in development:
+3. Run the app for development:
    ```bash
    python app.py
-   # or set FLASK_APP and use flask run
+   # or use Flask CLI: $env:FLASK_APP = "app:create_app()"; flask run
    ```
 
-## ✅ Testing
-Run the test suite with:
-```bash
-pip install -r requirements.txt
-pytest -q
+## Tests & CI
+- Run tests locally: `pytest -q` (tests are in `tests/`).
+- GitHub Actions workflow (`.github/workflows/ci.yml`) runs tests on push/PR for Python 3.10/3.11.
+
+## Project structure (high level)
+```
+├── app.py              # Application factory & routes
+├── models.py           # SQLAlchemy models
+├── templates/          # Jinja templates (includes `macros.html`)
+├── static/             # CSS and small JS (nav + theme)
+├── instance/           # local SQLite DB (ignored)
+├── tests/              # pytest tests
+└── requirements.txt    # Python deps
 ```
 
-## Notes
-- Tailwind-related build files and scripts are not required for the simplified UI and may be added later if you want a Tailwind workflow.
-- The local SQLite DB lives in `instance/` and is ignored by git (`instance/*.db` in `.gitignore`).
+## Notes & future work
+- The UI is intentionally minimal and optimized for small payloads; charts use lightweight SVG placeholders so you can incrementally add charting libraries when needed.
+- Settings forms are present but not persisted yet — a small DB migration can add user preferences later.
+- Keep sensitive config out of the repo — use `.env` or environment variables for production settings.
+
+If you want, I can also add a short CONTRIBUTING guide and basic linting (flake8/black) to the repo.
 
 ## 📂 Project Structure
 ```text
